@@ -1,6 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/macos,zig
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,zig
 
+# Hide input and example files
+**/input.txt
+**/example.txt
+
 ### macOS ###
 # General
 .DS_Store
