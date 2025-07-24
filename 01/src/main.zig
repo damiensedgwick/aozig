@@ -1,15 +1,21 @@
 const std = @import("std");
 pub fn main() !void {
-    // Example:
+    // Part 2 Example:
     // 3   4 -> left: 3, right: 4
     // 4   3 -> left: 4, right: 3
     // 2   5 -> left: 2, right: 5
     // 1   3 -> left: 1, right: 3
     // 3   9 -> left: 3, right: 9
     // 3   3 -> left: 3, right: 3
-    // After sorting: left: [1,2,3,3,3,4], right: [3,3,3,4,5,9]
-    // Pairs: (1,3)=2, (2,3)=1, (3,3)=0, (3,4)=1, (3,5)=2, (4,9)=5
-    // Total: 2+1+0+1+2+5 = 11
+    // Left list: [3,4,2,1,3,3], Right list: [4,3,5,3,9,3]
+    // For each left number, count occurrences in right list:
+    // 3 appears 3 times in right: 3*3=9
+    // 4 appears 1 time in right: 4*1=4
+    // 2 appears 0 times in right: 2*0=0
+    // 1 appears 0 times in right: 1*0=0
+    // 3 appears 3 times in right: 3*3=9
+    // 3 appears 3 times in right: 3*3=9
+    // Total similarity score: 9+4+0+0+9+9 = 31
 
     // first we get the current working directory
     const cwd: std.fs.Dir = std.fs.cwd();
@@ -51,17 +57,18 @@ pub fn main() !void {
         right_list.append(second) catch continue;
     }
 
-    // sort both lists
-    std.mem.sort(i32, left_list.items, {}, std.sort.asc(i32));
-    std.mem.sort(i32, right_list.items, {}, std.sort.asc(i32));
-
-    // calculate total distance by pairing sorted numbers
-    var total_distance: i32 = 0;
-    for (left_list.items, right_list.items) |left_num, right_num| {
-        const distance = if (left_num > right_num) left_num - right_num else right_num - left_num;
-        total_distance += distance;
+    // calculate similarity score
+    var similarity_score: i32 = 0;
+    for (left_list.items) |left_num| {
+        var count: i32 = 0;
+        for (right_list.items) |right_num| {
+            if (left_num == right_num) {
+                count += 1;
+            }
+        }
+        similarity_score += left_num * count;
     }
 
-    // print the total distance
-    std.debug.print("Total distance: {}\n", .{total_distance});
+    // print the similarity score
+    std.debug.print("Similarity score: {}\n", .{similarity_score});
 }
